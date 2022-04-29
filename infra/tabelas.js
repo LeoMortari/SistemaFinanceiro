@@ -21,6 +21,7 @@ class Tabelas {
       'FOREIGN KEY (id_pk) REFERENCES login (id_pk)'
     this.connection.query(sql);
   }
+  //curl -d "descricao=&saldo=4000&limite=5000&nome=lucas" http://localhost:3000/carteira
   */
 }
 
