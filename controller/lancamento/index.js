@@ -35,7 +35,6 @@ const verifyItems = (req) => {
   //Para todos os campos vazios, é retornado um objeto de erro
   objArr.map((item, index) => {
     if (!item) {
-      console.log(item);
       error.push({ field: values[index], message: "Campo Obrigatório" });
     }
   });
@@ -90,7 +89,7 @@ module.exports = (app) => {
     const verifyValues = verifyItems(body);
 
     //Verifica se tem algum campo em branco;
-    if (verifyValues) {
+    if (verifyValues.length > 0) {
       return res.status(400).send(verifyValues);
     }
 
