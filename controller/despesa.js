@@ -6,7 +6,7 @@ module.exports = (app) => {
     //req = requisição
     //res = response
 
-    res.send("despesa"); // resposta da API para o front;
+    res.send("Você está em DESPESA!"); // resposta da API para o front;
   });
 // final do endpoint
 };
