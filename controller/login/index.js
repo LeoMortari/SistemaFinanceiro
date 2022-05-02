@@ -3,7 +3,7 @@ const mysql = require("../../infra/connection");
 //validando email
 const validaremail = (email) => {
   let cont = 0;
-  if(email.length<9) return false;
+  if (email.length < 9) return false;
   if (email.match(/@/)) {
     if (email.match(/\./)) {
       cont++
@@ -35,36 +35,43 @@ module.exports = (app) => {
     let { email, senha } = req.body;
 
     //se o email ou senha forem invalidos, não serão guardados no banco de dados
-    if(!validaremail(email) || !validarsenha(senha)){
-     throw console.error("senha ou email inválido");
-    }else{
-    const SQL = `INSERT INTO login (email,senha) VALUES ('${email}','${senha}')`;
-    mysql.query(SQL, (err, result) => {
-      if (err) return res.send("Não foi possivel adicionar um novo lançamento");
+    if (!validaremail(email) || !validarsenha(senha)) {
+      throw console.error("senha ou email inválido");
+    } else {
+      const SQL = `INSERT INTO login (email,senha) VALUES ('${email}','${senha}')`;
+      mysql.query(SQL, (err, result) => {
+        if (err) return res.send("Não foi possivel adicionar um novo lançamento");
 
-      if (result.message) {
-        const { message } = result;
+        if (result.message) {
+          const { message } = result;
 
-        return res.send(message);
-      }
-    });
-  }
+          return res.send(message);
+        }
+      });
+    }
     res.send("Login inserido com sucesso")
   });
+  /* curl para inserir dados no BD
+  curl -d "email=kenzoawane@gmail.com&senha=Lkasbr@123" http://localhost:3000/login/adicionar
+  */
 
   app.post("/login", (req, res) => {
-    let{email, senha} = req.body
-    
+    let { email, senha } = req.body
+
     const SQL = `SELECT * FROM login where email='${email}' and senha='${senha}'`;
     mysql.query(SQL, (err, result) => {
       if (err)
-        return console.log("erro no login "+err);
+        return console.log("erro no login " + err);
 
-      //Caso não ahce o email e senha informados
+      //Caso não ache o email e senha informados
       if (result.length == 0) {
-        return res.send("login não encontrado" );
+        return res.send("login não encontrado");
       }
       return res.send('logado com sucesso!')
+
+      /* curl para verificar se o dados inseridos batem no banco de dados
+      curl -d "email=kenzoawane@gmail.com&senha=Lkasbr@123" http://localhost:3000/login
+      */
 
       // const newResult = result.map((item) => {
       //   return { ...item };
@@ -72,7 +79,7 @@ module.exports = (app) => {
 
       // const verificar = (email,senha) => {
       //   let cont = 0;
-  
+
       //   const texto = JSON.stringify(newResult)
       //   if (texto.match(email)) cont++;
       //   if(validaremail(email)) cont++;   
@@ -86,15 +93,10 @@ module.exports = (app) => {
       // }
 
       // //verificar se o email e senha inseridos estão no banco de dados
-      
+
       // verificar(email,senha);
     });
 
   });
 
 };
-
-
-/*
-curl -d "email=kenzoawane@gmail.com&senha=Lkasbr@123" http://localhost:3000/login
-*/
