@@ -37,12 +37,6 @@ module.exports = (app) => {
       }else{
         console.log("senha inválida")
       }
-
-      if (result.message) {
-        const { message } = result;
-
-        return res.send(message);
-      }
     }
     );
     console.log(req.body);
