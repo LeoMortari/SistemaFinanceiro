@@ -7,31 +7,40 @@ const fixDate = (data) => {
   //Gatters de data
   const day = date.getDate();
   const year = date.getFullYear();
-  let mounth = date.getMonth() + 1;
+  let month = date.getMonth() + 1;
 
   //Caso o mês seja menor que 10, adiciona o '0' antes do número
-  if (mounth < 10) {
-    mounth = `0${mounth}`;
+  if (month < 10) {
+    month = `0${month}`;
   }
 
   //Retorna a string formatada
-  return `${day}/${mounth}/${year}`;
+  return `${day}/${month}/${year}`;
 };
 
 //Função que verifica se algum item não está vazio;
 const verifyItems = (req) => {
-  let error;
+  let error = [];
+  let values = [
+    "descricao",
+    "valor",
+    "tipo",
+    "carteira_fk",
+    "categoria_fk",
+    "data",
+  ];
 
   const objArr = Object.values(req);
 
   //Procura pelo primeiro campo que esteja vazio
-  objArr.find((item) => {
+  objArr.map((item, index) => {
     if (!item) {
-      error = "Campo Obrigatório";
+      console.log(item);
+      error.push({ field: values[index], message: "Campo Obrigatório" });
     }
   });
 
-  return error ? error : 0;
+  return error;
 };
 
 //Função que valida datas
@@ -64,7 +73,7 @@ const isValidDate = (data) => {
     }
   }
 
-  //Caso de 3, significa que o dia, o mes e o ano estão errados
+  //Caso resulte em 3, significa que o dia, o mes e o ano estão errados
   if (objError.length == 3) {
     totallyErrorDate.push({ field: "date", error: "Insira uma data válida" });
   }
@@ -78,9 +87,11 @@ module.exports = (app) => {
   app.post("/lancamento/adicionar", (req, res) => {
     const { body } = req;
 
+    const verifyValues = verifyItems(body);
+
     //Verifica se tem algum campo em branco;
-    if (verifyItems(body)) {
-      return res.status(400).send(verifyItems(body));
+    if (verifyValues) {
+      return res.status(400).send(verifyValues);
     }
 
     //Retira todos os valores vindo da requisição
