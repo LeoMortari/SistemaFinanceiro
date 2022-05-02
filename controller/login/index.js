@@ -1,8 +1,9 @@
 const mysql = require("../../infra/connection");
 
 //validando email
-const verificaremail = (email) => {
+const validaremail = (email) => {
   let cont = 0;
+  if(email.length<9) return false;
   if (email.match(/@/)) {
     if (email.match(/\./)) {
       cont++
@@ -16,7 +17,7 @@ const verificaremail = (email) => {
 };
 
 //validando senha
-const verificarsenha = (senha) => {
+const validarsenha = (senha) => {
   let ver = /^(?=.*[@!#$%^&*()/\\]{1,})(?=.*[0-9]{1,})(?=.*[A-Z]{1,})[@!#$%^&*()/\\a-zA-Z0-9]{8,20}$/;
   if (ver.test(senha)) {
     return true
@@ -34,7 +35,7 @@ module.exports = (app) => {
     let { email, senha } = req.body;
 
     //se o email ou senha forem invalidos, não serão guardados no banco de dados
-    if(!verificaremail(email) || !verificarsenha(senha)){
+    if(!validaremail(email) || !validarsenha(senha)){
      throw console.error("senha ou email inválido");
     }else{
     const SQL = `INSERT INTO login (email,senha) VALUES ('${email}','${senha}')`;
@@ -48,40 +49,45 @@ module.exports = (app) => {
       }
     });
   }
-    res.send("voce esta em login")
+    res.send("Login inserido com sucesso")
   });
 
-  app.post("/login/listar", (_, res) => {
-    const SQL = "SELECT * FROM login;";
-
+  app.post("/login", (req, res) => {
+    let{email, senha} = req.body
+    
+    const SQL = `SELECT * FROM login where email='${email}' and senha='${senha}'`;
     mysql.query(SQL, (err, result) => {
       if (err)
-        return res.status(400).send("Não foi possivel buscar os login");
+        return console.log("erro no login "+err);
 
-      //Caso não tenha nenhum lançamento
+      //Caso não ahce o email e senha informados
       if (result.length == 0) {
-        return res.json({ message: "Não há nenhum login" });
+        return res.send("login não encontrado" );
       }
+      return res.send('logado com sucesso!')
 
-      const newResult = result.map((item) => {
-        return { ...item };
-      });
+      // const newResult = result.map((item) => {
+      //   return { ...item };
+      // });
 
-      //Retornar na response
-      res.send(newResult);
+      // const verificar = (email,senha) => {
+      //   let cont = 0;
+  
+      //   const texto = JSON.stringify(newResult)
+      //   if (texto.match(email)) cont++;
+      //   if(validaremail(email)) cont++;   
+      //   if (texto.match(senha)) cont++;
+      //   if(validarsenha(senha)) cont++;   
 
-      //verificar se o email e senha inseridos estão no banco de dados
-      const verificar = (email,senha) => {
-        let cont = 0;
-        const texto = JSON.stringify(newResult)
-        if (texto.match(email)) cont++;    
-        if (texto.match(senha)) cont++;
-        if(cont==2){
-          return console.log('login efetuado com sucesso!')
-        }
-        return console.log('email ou senha inválido(s)')
-      }
-      verificar('kenzoawane@gmail.com','Lkasbr123@');
+      //   if(cont==4){
+      //     return res.send('login efetuado com sucesso!')
+      //   }
+      //   return res.send('email ou senha inválido(s)')
+      // }
+
+      // //verificar se o email e senha inseridos estão no banco de dados
+      
+      // verificar(email,senha);
     });
 
   });
