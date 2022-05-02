@@ -1,5 +1,5 @@
 {
-  "name": "project",
+  "name": "sistemaf",
   "version": "1.0.0",
   "description": "project study",
   "main": "index.js",
@@ -10,12 +10,20 @@
   "author": "LeoMortari",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.16"
   },
   "dependencies": {
     "body-parser": "^1.20.0",
     "consign": "^0.1.6",
-    "express": "^4.17.3",
+    "express": "^4.18.1",
     "mysql": "^2.18.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeoMortari/SistemaFinanceiro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LeoMortari/SistemaFinanceiro/issues"
+  },
+  "homepage": "https://github.com/LeoMortari/SistemaFinanceiro#readme"
 }

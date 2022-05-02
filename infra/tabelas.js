@@ -1,9 +1,26 @@
-class Tabelas {
-  init(connection) {
-    console.log("Connected stable");
+class Categoria {
+  //construtor de tabela
+  init(conexao) {
+    console.log("Banco conectado, itau feito pra você!");
   }
 
-  // Classe de criação de tabelas para teste, não mexer por enquanto;
+  criarDespesa() {
+    const sql =
+      "CREATE TABLE Categoria" +
+      "(id_pk int NOT NULL AUTO_INCREMENT," +
+      "nome varchar(30) NOT NULL," +
+      "descricao varchar(50) NOT NULL" +
+      "PRIMARY KEY(id_pk))";
+    this.conexao.query(sql);
+    /*this.conexao.query(sql, erro => {
+          if(erro){
+              console.log(erro)
+          }else{
+              console.log('Tabela movimento criada com sucesso!')
+          }
+
+      })*/
+  }
 
   criaDespesa() {
     const sql =
@@ -24,5 +41,7 @@ class Tabelas {
   //curl -d "descricao=&saldo=4000&limite=5000&nome=lucas" http://localhost:3000/carteira
   */
 }
+module.exports = new Categoria();
 
-module.exports = new Tabelas;
+//IR em index.js e criar a conexão
+//curl -d "id=1&valor=29.9&descricao=teste" http://localhost:3000/despesa
