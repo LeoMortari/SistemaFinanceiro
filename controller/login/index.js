@@ -1,15 +1,42 @@
 const mysql = require("../../infra/connection");
 
+//validando email
+const verificaremail = (email) => {
+  let cont = 0;
+  if (email.match(/@/)) {
+    if (email.match(/\./)) {
+      cont++
+    }
+  }
+  if (cont == 1) {
+    console.log("Email válido")
+  } else {
+    console.log("Email inválido")
+  }
+};
+
+//validando senha
+const verificarsenha = (senha) => {
+  let ver = /^(?=.*[@!#$%^&*()/\\]{1,})(?=.*[0-9]{1,})(?=.*[A-Z]{1,})[@!#$%^&*()/\\a-zA-Z0-9]{8,20}$/;
+  if (ver.test(senha)) {
+    return console.log("senha válida")
+  }
+  return console.log("senha inválida")
+
+}
+
 module.exports = (app) => {
-  app.get('/login', (req,res) => {
+  app.get('/login', (req, res) => {
     res.send("voce está em login")
   })
 
   app.post("/login", (req, res) => {
     let { email, id_pk, senha } = req.body;
 
-    const SQL = `INSERT INTO login (email,id_pk,senha) VALUES ('${email}', ${id_pk}, '${senha}')`;
+    const SQL = `INSERT INTO login (email,senha) VALUES ('${email}','${senha}')`;
+    verificaremail(email);
 
+    verificarsenha(senha);
     mysql.query(SQL, (err, result) => {
       if (err) return res.send("Não foi possivel adicionar um novo lançamento");
 
@@ -19,31 +46,36 @@ module.exports = (app) => {
         return res.send(message);
       }
     });
-
-    //testando validação
-    const Selecionar = `SELECT * FROM login`;
-    mysql.query(Selecionar, (err, result) => {
-      if (err) return res.send("Não foi possivel adicionar um novo lançamento");
-
-      //validando email
-      if (email.match(/@/)) {
-        if (email.match(/\./)) {
-          console.log("email valido")
-        } else {
-          console.log("email inválido")
-        }
-      }
-
-      //validando senha
-      if(senha.length>7){
-        console.log("senha válida")
-        
-      }else{
-        console.log("senha inválida")
-      }
-    }
-    );
-    console.log(req.body);
-    res.send("login adicionado");
+    res.send("voce esta em login")
   });
+
+  app.post("/login/listar", (_, res) => {
+    const SQL = "SELECT * FROM login  ";
+
+    mysql.query(SQL, (err, result) => {
+      if (err)
+        return res.status(400).send("Não foi possivel buscar os lançamentos");
+
+      //Caso não tenha nenhum lançamento
+      if (result.length == 0) {
+        return res.json({ message: "Não há nenhum login" });
+      }
+
+      //Inverter a data que volta do DB
+      const newResult = result.map((item) => {
+
+
+        return { ...item };
+      });
+
+      //Retornar na response
+      return res.send(newResult);
+    });
+  });
+
 };
+
+
+/*
+curl -d "email=kenzoawane@gmail.com&senha=Lkasbr@123" http://localhost:3000/login
+*/
