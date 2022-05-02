@@ -2,7 +2,7 @@ class Tabelas {
   init(connection) {
     console.log("Connected stable");
     this.connection=connection
-    this.criaLogin
+    this.criaLogin()
   }
 
   // Classe de criação de tabelas para teste, não mexer por enquanto;
