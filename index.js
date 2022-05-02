@@ -2,7 +2,7 @@ const customExpress = require("./config/customExpress");
 const app = customExpress();
 const connection = require("./infra/connection");
 const table = require("./infra/tabelas");
-const port = 3001;
+const port = 3000;
 
 connection.connect((err) => {
   // Caso dê erro com a conexão com o banco
