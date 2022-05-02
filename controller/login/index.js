@@ -1,6 +1,10 @@
 const mysql = require("../../infra/connection");
 
 module.exports = (app) => {
+  app.get('/login', (req,res) => {
+    res.send("voce está em login")
+  })
+
   app.post("/login", (req, res) => {
     let { email, id_pk, senha } = req.body;
 
