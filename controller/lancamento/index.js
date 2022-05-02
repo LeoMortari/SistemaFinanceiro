@@ -32,7 +32,7 @@ const verifyItems = (req) => {
 
   const objArr = Object.values(req);
 
-  //Procura pelo primeiro campo que esteja vazio
+  //Para todos os campos vazios, é retornado um objeto de erro
   objArr.map((item, index) => {
     if (!item) {
       console.log(item);
@@ -157,3 +157,17 @@ module.exports = (app) => {
     });
   });
 };
+
+/* 
+CURL para testar via POSTMAN:
+
+
+curl --location --request POST 'http://localhost:3000/lancamento/adicionar' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'descricao=' \
+--data-urlencode 'valor=' \
+--data-urlencode 'tipo=' \
+--data-urlencode 'carteira_fk=' \
+--data-urlencode 'categoria_fk=' \
+--data-urlencode 'data='
+*/
