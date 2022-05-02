@@ -13,17 +13,15 @@ module.exports = (app) => {
 
       if (err)
         errors.push({
-          field: "queue",
           message: "Não foi possível buscar carteiras",
         });
 
       if (result.length > 0) {
-        errors.push({ field: "carteira", message: "Carteira já existente" });
+        errors.push({message: "Carteira já existente" });
       } else {
         mysql.query(insertSQL, (err) => {
           if (err)
             errors.push({
-              field: "queue",
               message: "Não foi possível adicionar carteira",
             });
         });
